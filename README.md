@@ -27,6 +27,9 @@ You can read more about it on this website: [Comment about heatsink on ENC28J60]
 So to summarize, a few cents stacked and taped upside the microchip will do the trick for a stable longer time.
 I discovered this far too late...
 
+#Schematics
+I'm currently working on it with fritzing. Really good program anyway :)
+
 #Arduino et ses prises controlées à travers le net
 ##Ou comment contrôler des prises avec un server arduino "lowcost"
 J'ai décidé de réaliser ce projet github en raison du manque de projets concrets bien documentés en français. Je le traduis aussi en anglais afin de le partager avec cette magnifique communauté qui est celle des technologie des IoT (Internet of Things ou [l'internet des objets](https://fr.wikipedia.org/wiki/Internet_des_objets)). L'objectif principal de ce projet est d'apprendre et de réaliser des projets concrets qui me permettent de simplifier les choses de la vie de tous les jours et de permettre l'accès à la technologie à quiconque s'y intéresse. Et le plus important c'est de réduire les couts de cette technologie.
@@ -49,3 +52,6 @@ Le module ENC28J60 à **OBLIGATOIREMENT** besoin d'un dissipateur thermique car 
 Vous pouvez en apprendre plus en lisant ces commentaires: [Comment about heatsink on ENC28J60](http://nathanhein.com/2013/02/getting-arduino-online-with-an-enc28j60/#comment-1296).
 Pour résumer, quelques cents empilés et collés sur la puce du module fera l'affaire pour une période de stabilité plus longue.
 J'ai découvert cela bien trop tard... 
+
+#Schémas
+Je suis actuelement en train d'y bosser sur fritzing. Très bon programme d'ailleurs :)
