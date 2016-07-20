@@ -1,8 +1,13 @@
 // Arduino simple web server by gigi199596
 
 #include <EtherCard.h>
+#include <EEPROM.h>
 
 #define STATIC 0  // set to 1 to disable DHCP (adjust myip/gwip values below)
+#define R1_ADDR 0
+#define R2_ADDR 1
+#define R3_ADDR 2
+#define R4_ADDR 3
 
 #if STATIC
 // ethernet interface ip address
@@ -19,6 +24,7 @@ boolean r1 = true;
 boolean r2 = true;
 boolean r3 = true;
 boolean r4 = true;
+
 const char string_0[] PROGMEM = "<H1>Arduino 4 Relay</H1> \r \n";
 const char string_1[] PROGMEM = "<A HREF='1'><font color=\"red\">relay 1</font></A></br> \r \n";
 const char string_2[] PROGMEM = "<A HREF='1'><font color=\"green\">relay 1</font></A></br> \r \n";
@@ -34,7 +40,7 @@ const char string_10[] PROGMEM = "<A HREF='o'><font color=\"black\">ALL OFF</fon
 // ethernet mac address - must be unique on your network
 static byte mymac[] = { 0x74,0x69,0x69,0x2D,0x30,0x31 };
 
-byte Ethernet::buffer[700]; // tcp/ip send and receive buffer
+byte Ethernet::buffer[500]; // tcp/ip send and receive buffer
 BufferFiller bfill;
 
 void setup(){
@@ -53,6 +59,30 @@ void setup(){
   ether.printIp("IP:  ", ether.myip);
   ether.printIp("GW:  ", ether.gwip);  
   ether.printIp("DNS: ", ether.dnsip);
+  Serial.println((boolean) EEPROM.read(R1_ADDR));
+  Serial.println((boolean) EEPROM.read(R2_ADDR));
+  Serial.println((boolean) EEPROM.read(R3_ADDR));
+  Serial.println((boolean) EEPROM.read(R4_ADDR));
+  if ((boolean) EEPROM.read(R1_ADDR) == 1){
+    r1 = true;
+  }else{
+    r1 = false;
+  }
+  if ((boolean) EEPROM.read(R2_ADDR) == 1){
+    r2 = true;
+  }else{
+    r2 = false;
+  }
+  if ((boolean) EEPROM.read(R3_ADDR) == 1){
+    r3 = true;
+  }else{
+    r3 = false;
+  }
+  if ((boolean) EEPROM.read(R4_ADDR) == 1){
+    r4 = true;
+  }else{
+    r4 = false;
+  }
   pinMode(relay1, OUTPUT);
   pinMode(relay2, OUTPUT);
   pinMode(relay3, OUTPUT);
@@ -74,8 +104,7 @@ static word homePage() {
     "Pragma: no-cache\r\n"
     "\r\n"
     "<meta content='1'/>"
-    "<title>Sockets server</title>"
-    "<h1> Arduino remoted sockets server :)</h1>"));
+    "<title>Sockets server</title>"));
   if (r1 == true){
     bfill.emit_p(string_1);
   }else{
@@ -98,7 +127,7 @@ static word homePage() {
   }
   bfill.emit_p(string_9);
   bfill.emit_p(string_10);
-  bfill.emit_p(PSTR("<h3>Uptime: $D$D:$D$D:$D$D</h3>"), h/10, h%10, m/10, m%10, s/10, s%10);
+  //bfill.emit_p(PSTR("<h3>Uptime: $D$D:$D$D:$D$D</h3>"), h/10, h%10, m/10, m%10, s/10, s%10);
   return bfill.position();
 }
 void loop(){
@@ -110,15 +139,19 @@ void loop(){
     if (strncmp("GET /1", data, 6) == 0){
       r1 = !r1;
       digitalWrite(relay1, r1);
+      EEPROM.write(R1_ADDR, (byte) r1);
     }else if (strncmp("GET /2", data, 6) == 0){
       r2 = !r2;
       digitalWrite(relay2, r2);
+      EEPROM.write(R2_ADDR, r2);
     }else if (strncmp("GET /3", data, 6) == 0){
       r3 = !r3;
       digitalWrite(relay3, r3);
+      EEPROM.write(R3_ADDR, r3);
     }else if(strncmp("GET /4", data, 6) == 0){
       r4 = !r4;
       digitalWrite(relay4, r4);
+      EEPROM.write(R4_ADDR, r4);
     }else if(strncmp("GET /i", data, 6) == 0){
       r1 = !r1;
       r2 = !r2;
@@ -128,6 +161,10 @@ void loop(){
       digitalWrite(relay2, r2);
       digitalWrite(relay3, r3);
       digitalWrite(relay4, r4);
+      EEPROM.write(R1_ADDR, r1);
+      EEPROM.write(R2_ADDR, r2);
+      EEPROM.write(R3_ADDR, r3);
+      EEPROM.write(R4_ADDR, r4);
     }else if(strncmp("GET /o", data, 6) == 0){
       r1 = true;
       r2 = true;
@@ -137,7 +174,12 @@ void loop(){
       digitalWrite(relay2, r2);
       digitalWrite(relay3, r3);
       digitalWrite(relay4, r4);
+      EEPROM.write(R1_ADDR, r1);
+      EEPROM.write(R2_ADDR, r2);
+      EEPROM.write(R3_ADDR, r3);
+      EEPROM.write(R4_ADDR, r4);
     }
     ether.httpServerReply(homePage());
+    delay(1);
   }
 }
