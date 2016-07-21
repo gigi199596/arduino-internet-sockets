@@ -14,6 +14,10 @@
 static byte myip[] = { 192,168,1,200 };
 // gateway ip address
 static byte gwip[] = { 192,168,1,1 };
+//DNS ip address
+static byte dnsip[] = {192, 168, 1,1};
+//netmask
+static byte maskip[] = {255, 255, 255, 0};
 #endif
 
 int relay1 = 2;
@@ -50,7 +54,7 @@ void setup(){
   if (ether.begin(sizeof Ethernet::buffer, mymac) == 0) 
     Serial.println( "Failed to access Ethernet controller");
 #if STATIC
-  ether.staticSetup(myip, gwip);
+  ether.staticSetup(myip, gwip, dnsip, maskip);
 #else
   if (!ether.dhcpSetup())
     Serial.println("DHCP failed");
